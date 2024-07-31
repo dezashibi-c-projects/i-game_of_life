@@ -10,8 +10,6 @@ It's a one file project just compile it and run it, that's all, read the descrip
 
 ---
 
-**As a** software developer,
-
 **I want to** create a console-based implementation of Conway's Game of Life in C,
 
 **So that** users can observe the evolution of cellular automata based on simple rules.
