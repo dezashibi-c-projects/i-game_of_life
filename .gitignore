@@ -1,3 +1,5 @@
 *.exe
 *.pdb
 *.o
+*.out
+game_of_life
