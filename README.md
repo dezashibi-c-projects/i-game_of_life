@@ -4,7 +4,9 @@ A console-based implementation of Conway's Game of Life in C, works both on Wind
 
 The approach for this project as it's more like a university assignments, interesting but boring at the same time!
 
-Si I've decided to put words together as a form of User's story so that reading this also can be helpful as well.
+So I've decided to put words together as a form of User's story so that reading this also can be helpful as well.
+
+It's a one file project just compile it and run it, that's all, read the descriptions below and in the code indeed.
 
 ---
 
