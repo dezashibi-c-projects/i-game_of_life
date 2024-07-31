@@ -86,7 +86,7 @@ int count_neighbors(Grid grid, int x, int y, int rows, int cols);
 void initialize_grid(Grid grid, int rows, int cols);
 
 /**
- * @brief Copys the grid data from one to another
+ * @brief Copies the grid data from one to another
  *
  * @param source
  * @param destination
@@ -114,7 +114,7 @@ int main()
     int rows, cols, x, y;
     char choice;
 
-    printf("%s", "Enter the number or rows: ");
+    printf("%s", "Enter the number of rows: ");
     scanf("%d", &rows);
 
     printf("%s", "Enter the number of columns: ");
@@ -169,17 +169,11 @@ int main()
                 printf("at %d, %d -> ", x, y);
                 scanf(" %c", &grid[x][y]);
 
-                if (&grid[x][y] != DEAD || &grid[x][y] != ALIVE)
+                if (grid[x][y] != DEAD && grid[x][y] != ALIVE)
                 {
-                    if (strlen(grid[x][y]) == 0)
-                    {
-                        grid[x][y] = DEAD;
-                        continue;
-                    }
+                    printf("Not a possible value, please enter '%c' for dead or '%c' for alive cells only\n", DEAD, ALIVE);
+                    goto repeat;
                 }
-
-                printf("Not a possible value, please enter '%c' for dead or '%c' for alive cells only", DEAD, ALIVE);
-                goto repeat;
             }
         }
     }
@@ -208,14 +202,22 @@ int main()
     while (1)
     {
         system(CLEAR); // clean the screen
+
         print_grid(grid, rows, cols);
+
         update_grid(grid, new_grid, rows, cols);
+        copy_grid(new_grid, grid, rows, cols);
+
         wait(delay);
 
         // check for 'q' press to end the simulation
         if (kbhit())
         {
+#ifdef _WIN32
+            char ch = _getch();
+#else
             char ch = getchar();
+#endif
             if (ch == 'q' || ch == 'Q')
                 break;
         }
@@ -237,3 +239,130 @@ int main()
 //////////////////////////////////////////////////////////////////////////////////////////
 /////// FUNCTION IMPLEMENTATIONS
 //////////////////////////////////////////////////////////////////////////////////////////
+void print_grid(Grid grid, int rows, int cols)
+{
+    for (int x = 0; x < rows; ++x)
+    {
+        for (int y = 0; y < cols; ++y)
+        {
+            printf("%c ", grid[x][y]);
+        }
+        puts("");
+    }
+}
+
+void update_grid(Grid grid, Grid new_grid, int rows, int cols)
+{
+    int neighbors;
+
+    for (int x = 0; x < rows; ++x)
+    {
+        for (int y = 0; y < cols; ++y)
+        {
+            neighbors = count_neighbors(grid, x, y, rows, cols);
+
+            if (grid[x][y] == ALIVE)
+            {
+                if (neighbors < 2 || neighbors > 3)
+                {
+                    new_grid[x][y] = DEAD;
+                }
+                else
+                {
+                    new_grid[x][y] = ALIVE;
+                }
+
+                continue;
+            }
+
+            // It's DEAD
+            if (neighbors == 3)
+            {
+                new_grid[x][y] = ALIVE;
+            }
+            else
+            {
+                new_grid[x][y] = DEAD;
+            }
+        }
+    }
+}
+
+int count_neighbors(Grid grid, int x, int y, int rows, int cols)
+{
+    int count = 0;
+
+    // Scanning the 8 cells around the given cell
+    for (int i = -1; i <= 1; ++i)
+    {
+        for (int j = -1; j <= 1; ++j)
+        {
+            if (i == 0 && j == 0)
+                continue;
+
+            int nx = x + i;
+            int ny = y + j;
+            // if the cell we're checking is within the grid and it's alive we increase the count
+            if (nx >= 0 && nx < rows && ny >= 0 && ny < cols && grid[nx][ny] == ALIVE)
+                ++count;
+        }
+    }
+
+    return count;
+}
+
+void initialize_grid(Grid grid, int rows, int cols)
+{
+    for (int x = 0; x < rows; ++x)
+    {
+        for (int y = 0; y < cols; ++y)
+        {
+            grid[x][y] = DEAD;
+        }
+    }
+}
+
+void copy_grid(Grid source, Grid destination, int rows, int cols)
+{
+    for (int x = 0; x < rows; ++x)
+    {
+        for (int y = 0; y < cols; ++y)
+        {
+            destination[x][y] = source[x][y];
+        }
+    }
+}
+
+#ifdef _WIN32
+int kbhit()
+{
+    return _kbhit();
+}
+#else
+int kbhit(void)
+{
+    struct termios oldt, newt;
+    int ch;
+    int oldf;
+
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
+    fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
+
+    ch = getchar();
+
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    fcntl(STDIN_FILENO, F_SETFL, oldf);
+
+    if (ch != EOF)
+    {
+        ungetc(ch, stdin);
+        return 1;
+    }
+
+    return 0;
+}
+#endif
