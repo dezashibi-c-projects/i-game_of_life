@@ -141,14 +141,14 @@ int main()
         grid[x] = malloc(cols * sizeof(char));
         if (grid[x] == NULL)
         {
-            fprintf(stderr, "Allocation for 'grid''s row #%d failed, error location '%s:%d'", x, __FILE__, __LINE__);
+            fprintf(stderr, "Allocation for grid's row #%d failed, error location '%s:%d'", x, __FILE__, __LINE__);
             exit(EXIT_FAILURE);
         }
 
         new_grid[x] = malloc(cols * sizeof(char));
         if (new_grid[x] == NULL)
         {
-            fprintf(stderr, "Allocation for 'new_grid''s row #%d failed, error location '%s:%d'", x, __FILE__, __LINE__);
+            fprintf(stderr, "Allocation for new_grid's row #%d failed, error location '%s:%d'", x, __FILE__, __LINE__);
             exit(EXIT_FAILURE);
         }
     }
