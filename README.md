@@ -38,7 +38,7 @@ It's a one file project just compile it and run it, that's all, read the descrip
 
 - A functional implementation of Conway's Game of Life in C, running in the console.
 - The game should accurately follow the defined rules and visually represent the evolution of the cellular automata.
-- Users should be able to start, pause, and stop the simulation at will.
+- Users should be able to start and stop the simulation at will.
 
 ## Implementation
 
@@ -63,9 +63,6 @@ It's a one file project just compile it and run it, that's all, read the descrip
     - Implement pause and resume functionality by checking user input within the loop.
 6. **Edge Cases:**
     - Handle edge cells properly by considering different boundary conditions (e.g., wrapping around, fixed boundaries, or extra border of dead cells).
-7. **Testing:**
-    - Test with various initial configurations to ensure the rules are correctly implemented.
-    - Include well-known patterns like the "glider" or "blinker" to verify the game's behavior.
 
 ## License
 
